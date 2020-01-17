@@ -80,11 +80,11 @@ public class ImportDialogMediator extends SimpleMediator<ImportDialog> {
         };
     }
 
-    public Vector2 getLocationFromDtde(DropTargetDragEvent dtde) {
-        Vector2 pos = new Vector2((float)(dtde).getLocation().getX(),(float)(dtde).getLocation().getY());
-
-        return pos;
-    }
+	public Vector2 getLocationFromDtde(DropTargetDragEvent dtde) {
+		if (dtde == null)
+			return Vector2.Zero.cpy();
+		return new Vector2((float) (dtde).getLocation().getX(), (float) (dtde).getLocation().getY());
+	}
 
     public Vector2 getLocationFromDropEvent(DropTargetDropEvent dtde) {
         Vector2 pos = new Vector2((float)(dtde).getLocation().getX(),(float)(dtde).getLocation().getY());
