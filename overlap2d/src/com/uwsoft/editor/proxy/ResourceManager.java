@@ -8,12 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
-
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.uwsoft.editor.renderer.data.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -21,6 +17,9 @@ import org.apache.commons.io.FilenameUtils;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,8 +28,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Json;
 import com.puremvc.patterns.proxy.BaseProxy;
-import com.uwsoft.editor.data.SpineAnimData;
 import com.uwsoft.editor.Overlap2DFacade;
+import com.uwsoft.editor.data.SpineAnimData;
+import com.uwsoft.editor.renderer.data.CompositeItemVO;
+import com.uwsoft.editor.renderer.data.CompositeVO;
+import com.uwsoft.editor.renderer.data.ProjectInfoVO;
+import com.uwsoft.editor.renderer.data.ResolutionEntryVO;
+import com.uwsoft.editor.renderer.data.SceneVO;
 import com.uwsoft.editor.renderer.resources.FontSizePair;
 import com.uwsoft.editor.renderer.resources.IResourceRetriever;
 import com.uwsoft.editor.renderer.utils.MySkin;
@@ -331,7 +335,7 @@ public class ResourceManager extends BaseProxy implements IResourceRetriever {
         FileHandle expectedFile = Gdx.files.internal(expectedPath);
         if (!expectedFile.exists()) {
             // let's check if system fonts fot it
-            HashMap<String, String> fonts = fontManager.getFontsMap();
+            Map<String, String> fonts = fontManager.getFontsMap();
             if (fonts.containsKey(fontName)) {
                 File source = new File(fonts.get(fontName));
                 FileUtils.copyFile(source, expectedFile.file());
