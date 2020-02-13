@@ -4,14 +4,13 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -36,7 +35,7 @@ public class FontManager extends BaseProxy {
 
     private Preferences prefs;
 
-    private HashMap<String, String> systemFontMap = new HashMap<>();
+    private Map<String, String> systemFontMap = new ConcurrentHashMap<>();
 
     public FontManager() {
         super(NAME);
@@ -114,30 +113,28 @@ public class FontManager extends BaseProxy {
         return files;
     }
 
-    public void preCacheSystemFontsMap() {
-        List<File> fontFiles = getSystemFontFiles();
-
-        for (File file : fontFiles) {
-            Font f = null;
-            try {
-                if (!systemFontMap.containsValue(file.getAbsolutePath())) {
-                    f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(file.getAbsolutePath()));
-                    String name = f.getFamily();
-                    systemFontMap.put(name, file.getAbsolutePath());
-                }
-            } catch (FontFormatException e) {
-                //e.printStackTrace();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
-
-        prefs.put(systemFontMap);
-        prefs.flush();
-    }
+	public void preCacheSystemFontsMap() {
+		List<File> fontFiles = getSystemFontFiles();
+		fontFiles.parallelStream().forEach(file -> {
+			Font f = null;
+			try {
+				if (!systemFontMap.containsValue(file.getAbsolutePath())) {
+					f = Font.createFont(Font.TRUETYPE_FONT, file);
+					String name = f.getFamily();
+					systemFontMap.put(name, file.getAbsolutePath());
+				}
+			} catch (FontFormatException e) {
+				// e.printStackTrace();
+			} catch (IOException e) {
+				// e.printStackTrace();
+			}
+		});
+		prefs.put(systemFontMap);
+		prefs.flush();
+	}
 
     public void loadCachedSystemFontMap() {
-        systemFontMap = (HashMap<String, String>) prefs.get();
+        systemFontMap = new ConcurrentHashMap(prefs.get());
     }
 
     public void invalidateFontMap() {
@@ -156,7 +153,7 @@ public class FontManager extends BaseProxy {
         invalidateFontMap();
     }
 
-    public HashMap<String, String> getFontsMap() {
+    public Map<String, String> getFontsMap() {
         return systemFontMap;
     }
 

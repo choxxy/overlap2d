@@ -1,17 +1,18 @@
 package com.uwsoft.editor.proxy;
 
-import com.badlogic.gdx.utils.Array;
-import com.runner.LibgdxRunner;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertThat;
+
+import java.io.File;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
-import java.util.HashMap;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.junit.Assert.assertThat;
+import com.badlogic.gdx.utils.Array;
+import com.runner.LibgdxRunner;
 
 @RunWith(LibgdxRunner.class)
 public class FontManagerTest {
@@ -37,7 +38,7 @@ public class FontManagerTest {
 
     @Test
     public void shouldFontMap() throws Exception {
-        HashMap<String, String> fontNamesFromMap = fontManager.getFontsMap();
+        Map<String, String> fontNamesFromMap = fontManager.getFontsMap();
 
         assertThat(fontNamesFromMap.size(), greaterThanOrEqualTo(0));
     }
