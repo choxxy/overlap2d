@@ -193,7 +193,7 @@ public class TiledPanelMediator extends SimpleMediator<TiledPanel> {
                 break;
             case MsgAPI.ITEM_DATA_UPDATED:
                 Entity item = notification.getBody();
-                if (tiledPlugin.isTile(item)) {
+                if (item != null && tiledPlugin.isTile(item)) {
                     ComponentRetriever.get(item, MainItemComponent.class).tags.remove(TiledPlugin.TILE_TAG);
                 }
                 break;
